@@ -264,61 +264,61 @@ public class Board extends Entity<Board> implements BoardInterface
 	}
 	
 	// MAP GENERATION
-	
+
 	@Override
 	public ArrayList<String> getMap(RelationParticipator observer, PS centerPs, double inDegrees)
 	{
 		centerPs = centerPs.getChunkCoords(true);
-		
+
 		ArrayList<String> ret = new ArrayList<String>();
 		Faction centerFaction = this.getFactionAt(centerPs);
-		
+
 		ret.add(Txt.titleize("("+centerPs.getChunkX() + "," + centerPs.getChunkZ()+") "+centerFaction.getName(observer)));
-		
+
 		int halfWidth = Const.MAP_WIDTH / 2;
 		int halfHeight = Const.MAP_HEIGHT / 2;
-		
+
 		PS topLeftPs = centerPs.plusChunkCoords(-halfWidth, -halfHeight);
-		
+
 		int width = halfWidth * 2 + 1;
 		int height = halfHeight * 2 + 1;
-		
+
 		// Make room for the list of names
 		height--;
-		
+
 		Map<Faction, Character> fList = new HashMap<Faction, Character>();
 		int chrIdx = 0;
-		
+
 		// For each row
 		for (int dz = 0; dz < height; dz++)
 		{
 			// Draw and add that row
-			String row = "";
+			StringBuilder row = new StringBuilder();
 			for (int dx = 0; dx < width; dx++)
 			{
 				if(dx == halfWidth && dz == halfHeight)
 				{
-					row += ChatColor.AQUA+"+";
+					row.append(ChatColor.AQUA+"+");
 					continue;
 				}
-			
+
 				PS herePs = topLeftPs.plusChunkCoords(dx, dz);
 				Faction hereFaction = this.getFactionAt(herePs);
 				if (hereFaction.isNone())
 				{
-					row += ChatColor.GRAY+"-";
+					row.append(ChatColor.GRAY+"-");
 				}
 				else
 				{
 					if (!fList.containsKey(hereFaction))
 						fList.put(hereFaction, Const.MAP_KEY_CHARS[chrIdx++]);
 					char fchar = fList.get(hereFaction);
-					row += hereFaction.getColorTo(observer) + "" + fchar;
+					row.append(hereFaction.getColorTo(observer) + "" + fchar);
 				}
 			}
-			ret.add(row);
+			ret.add(row.toString());
 		}
-		
+
 		// Get the compass
 		ArrayList<String> asciiCompass = AsciiCompass.getAsciiCompass(inDegrees, ChatColor.RED, Txt.parse("<a>"));
 
@@ -326,7 +326,7 @@ public class Board extends Entity<Board> implements BoardInterface
 		ret.set(1, asciiCompass.get(0)+ret.get(1).substring(3*3));
 		ret.set(2, asciiCompass.get(1)+ret.get(2).substring(3*3));
 		ret.set(3, asciiCompass.get(2)+ret.get(3).substring(3*3));
-			
+
 		String fRow = "";
 		for (Faction keyfaction : fList.keySet())
 		{
@@ -334,8 +334,8 @@ public class Board extends Entity<Board> implements BoardInterface
 		}
 		fRow = fRow.trim();
 		ret.add(fRow);
-		
+
 		return ret;
 	}
-	
+
 }
