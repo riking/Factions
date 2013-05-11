@@ -22,34 +22,34 @@ public class UConf extends Entity<UConf>
 	// -------------------------------------------- //
 	// META
 	// -------------------------------------------- //
-	
+
 	public static UConf get(Object oid)
 	{
 		return UConfColls.get().get2(oid);
 	}
-	
+
 	// -------------------------------------------- //
 	// UNIVERSE ENABLE SWITCH
 	// -------------------------------------------- //
-	
+
 	public boolean enabled = true;
-	
+
 	public static boolean isDisabled(Object universe)
 	{
 		return isDisabled(universe, null);
 	}
-	
+
 	public static String getDisabledMessage(Object universe)
 	{
 		UConf uconf = UConf.get(universe);
 		return Txt.parse("<i>Factions are disabled in the <h>%s <i>universe.", uconf.getUniverse());
 	}
-	
+
 	public static boolean isDisabled(Object universe, Object inform)
 	{
 		UConf uconf = UConf.get(universe);
 		if (uconf.enabled) return false;
-		
+
 		if (inform instanceof CommandSender)
 		{
 			((CommandSender)inform).sendMessage(getDisabledMessage(universe));
@@ -58,26 +58,28 @@ public class UConf extends Entity<UConf>
 		{
 			((SenderEntity<?>)inform).sendMessage(getDisabledMessage(universe));
 		}
-		
+
 		return true;
 	}
-	
+
 	// -------------------------------------------- //
 	// SPECIAL FACTION IDS
 	// -------------------------------------------- //
-	
+
 	public String factionIdNone = UUID.randomUUID().toString();
 	public String factionIdSafezone = UUID.randomUUID().toString();
 	public String factionIdWarzone = UUID.randomUUID().toString();
-	
+
 	// -------------------------------------------- //
 	// DEFAULTS
 	// -------------------------------------------- //
-	
+
 	public String defaultPlayerFactionId = this.factionIdNone;
 	public Rel defaultPlayerRole = Rel.RECRUIT;
 	public double defaultPlayerPower = 0.0;
-	
+    public double defaultPlayerPowerBoost = 0.0;
+    public double defaultFactionPowerBoost = 0.0;
+
 	public boolean defaultFactionOpen = false;
 	public Map<FFlag, Boolean> defaultFactionFlags = FFlag.getDefaultDefaults();
 	public Map<FPerm, Set<Rel>> defaultFactionPerms = FPerm.getDefaultDefaults();
@@ -85,39 +87,39 @@ public class UConf extends Entity<UConf>
 	// -------------------------------------------- //
 	// POWER
 	// -------------------------------------------- //
-	
+
 	public double powerMax = 10.0;
 	public double powerMin = 0.0;
 	public double powerPerHour = 2.0;
 	public double powerPerDeath = -2.0;
-	
+
 	public boolean canLeaveWithNegativePower = true;
-	
+
 	// -------------------------------------------- //
 	// CORE
 	// -------------------------------------------- //
 
 	public int factionMemberLimit = 0;
 	public double factionPowerMax = 0.0;
-	
+
 	public int factionNameLengthMin = 3;
 	public int factionNameLengthMax = 16;
 	public boolean factionNameForceUpperCase = false;
-	
+
 	// -------------------------------------------- //
 	// CLAIMS
 	// -------------------------------------------- //
-	
+
 	public boolean claimsMustBeConnected = true;
 	public boolean claimingFromOthersAllowed = true;
 	public boolean claimsCanBeUnconnectedIfOwnedByOtherFaction = true;
 	public int claimsRequireMinFactionMembers = 1;
 	public int claimedLandsMax = 0;
-	
+
 	// -------------------------------------------- //
 	// HOMES
 	// -------------------------------------------- //
-	
+
 	public boolean homesEnabled = true;
 	public boolean homesMustBeInClaimedTerritory = true;
 	public boolean homesTeleportCommandEnabled = true;
@@ -125,21 +127,21 @@ public class UConf extends Entity<UConf>
 	public boolean homesTeleportAllowedFromDifferentWorld = true;
 	public double homesTeleportAllowedEnemyDistance = 32.0;
 	public boolean homesTeleportIgnoreEnemiesIfInOwnTerritory = true;
-	
+
 	// -------------------------------------------- //
 	// ASSORTED
 	// -------------------------------------------- //
-	
+
 	public boolean permanentFactionsDisableLeaderPromotion = false;
 	public int actionDeniedPainAmount = 2;
 	public boolean disablePVPForFactionlessPlayers = false;
 	public boolean enablePVPAgainstFactionlessInAttackersLand = false;
 	public double territoryShieldFactor = 0.3;
-	
+
 	// -------------------------------------------- //
 	// DENY COMMANDS
 	// -------------------------------------------- //
-	
+
 	// commands which will be prevented if the player is a member of a permanent faction
 	public List<String> denyCommandsPermanentFactionMember = new ArrayList<String>();
 
@@ -169,36 +171,36 @@ public class UConf extends Entity<UConf>
 		Rel.ALLY, new ArrayList<String>(),
 		Rel.MEMBER, new ArrayList<String>()
 	);
-	
+
 	// -------------------------------------------- //
 	// INTEGRATION: LWC
 	// -------------------------------------------- //
-	
+
 	public Map<FactionsEventChunkChangeType, Boolean> lwcRemoveOnChange = MUtil.map(
 		FactionsEventChunkChangeType.BUY, false,
 		FactionsEventChunkChangeType.SELL, false,
 		FactionsEventChunkChangeType.CONQUER, false,
 		FactionsEventChunkChangeType.PILLAGE, false
 	);
-	
+
 	// -------------------------------------------- //
 	// INTEGRATION: ECONOMY
 	// -------------------------------------------- //
-	
+
 	public boolean econEnabled = false;
-	
+
 	// TODO: Rename to include unit.
 	public double econLandReward = 0.00;
-	
+
 	public String econUniverseAccount = "";
-	
+
 	public Map<FactionsEventChunkChangeType, Double> econChunkCost = MUtil.map(
 		FactionsEventChunkChangeType.BUY, 30.0,
 		FactionsEventChunkChangeType.SELL, -20.0,
 		FactionsEventChunkChangeType.CONQUER, -10.0,
 		FactionsEventChunkChangeType.PILLAGE, -10.0
 	);
-	
+
 	public double econCostCreate = 200.0;
 	public double econCostSethome = 0.0;
 	public double econCostJoin = 0.0;
@@ -211,14 +213,14 @@ public class UConf extends Entity<UConf>
 	public double econCostDescription = 0.0;
 	public double econCostTitle = 0.0;
 	public double econCostOpen = 0.0;
-	
+
 	public Map<Rel, Double> econRelCost = MUtil.map(
 		Rel.ENEMY, 0.0,
 		Rel.ALLY, 0.0,
 		Rel.TRUCE, 0.0,
 		Rel.NEUTRAL, 0.0
 	);
-	
+
 	//Faction banks, to pay for land claiming and other costs instead of individuals paying for them
 	public boolean bankEnabled = true;
 	//public static boolean bankMembersCanWithdraw = false; //Have to be at least moderator to withdraw or pay money to another faction
